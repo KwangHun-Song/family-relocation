@@ -1,6 +1,7 @@
 # 웹서비스 — 구현 계획
 
-> 최종 업데이트: 2026-04-09
+> 최종 업데이트: 2026-04-09  
+> 리뷰 반영: `review/review.md` (2026-04-09)
 
 ---
 
@@ -29,8 +30,9 @@ npx create-next-app@latest web \
   --import-alias "@/*"
 ```
 
-- [ ] `web/` 폴더 생성 및 Next.js 15 초기화
+- [ ] `web/` 폴더 생성 및 Next.js 15 초기화 (Tailwind v4 기본 설치)
 - [ ] 루트에 `vercel.json` 생성 (`rootDirectory: web`)
+- [ ] `web/.gitignore`에 `content/` 추가
 - [ ] 불필요한 기본 파일 제거 (`app/page.tsx` 초기화)
 
 ---
@@ -38,13 +40,13 @@ npx create-next-app@latest web \
 ### T2-A — Auth 설정 (T1 완료 후)
 
 **담당:** executor 에이전트  
-**완료 기준:** `/api/auth/signin` 접근 시 Google 로그인 버튼 표시
+**완료 기준:** `/api/auth/signin` 접근 시 Google 로그인 버튼 표시, 미인증 요청 시 자동 리다이렉트
 
 - [ ] `next-auth@beta` 설치
 - [ ] `lib/auth.ts` 작성 (Google Provider + ALLOWED_EMAILS 검증)
 - [ ] `app/auth/[...nextauth]/route.ts` 작성
 - [ ] `app/layout.tsx`에 SessionProvider 추가
-- [ ] 미로그인 시 리다이렉트 미들웨어 (`middleware.ts`) 작성
+- [ ] `middleware.ts` 작성 — Edge Middleware로 모든 요청에 JWT 검증, 미인증 시 `/api/auth/signin` 리다이렉트
 - [ ] `.env.local.example` 작성 (실제 값 제외)
 
 ---
@@ -55,11 +57,15 @@ npx create-next-app@latest web \
 **완료 기준:** `readMarkdown()` 호출 시 파일 내용 반환, 빌드 오류 없음
 
 - [ ] `react-markdown`, `remark-gfm` 설치
-- [ ] `lib/markdown.ts` 작성 (`readMarkdown(relativePath)`)
+- [ ] `web/scripts/copy-content.js` 작성 — prebuild 시 루트의 마크다운 파일을 `web/content/`로 복사
+- [ ] `package.json`에 `prebuild` 스크립트 추가 (`node scripts/copy-content.js`)
+- [ ] `dev` 스크립트도 복사 선행 실행으로 수정
+- [ ] `lib/categories.ts` 작성 — 영문 slug ↔ 한국어 폴더명 매핑 상수 정의
+- [ ] `lib/markdown.ts` 작성 — `content/` 폴더 기준 `readMarkdown(relativePath)`
 - [ ] `components/MarkdownRenderer.tsx` 작성
   - react-markdown + remark-gfm 사용
   - 체크박스 완료 항목 취소선 스타일
-  - 테이블 스타일 (Tailwind prose)
+  - 테이블 스타일 (Tailwind v4 prose)
 
 ---
 
@@ -74,7 +80,8 @@ npx create-next-app@latest web \
 - [ ] `app/todo/page.tsx` — 전체 투두리스트
   - `전체-투두리스트.md` 렌더링
 - [ ] `app/[category]/page.tsx` — 카테고리별 뷰
-  - `generateStaticParams()` 로 01~04 카테고리 정적 생성
+  - `generateStaticParams()` 로 영문 slug 4개(`house`, `contract`, `loan`, `moving`) 정적 생성
+  - `lib/categories.ts`의 매핑으로 slug → 한국어 폴더명 변환
   - 탭: 현재상황 / 투두리스트 / 진행사항
   - 각 탭 클릭 시 해당 마크다운 렌더링
 
@@ -141,13 +148,13 @@ T1 (초기화)
     "typescript": "^5.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
-    "tailwindcss": "^3.0.0",
-    "@tailwindcss/typography": "^0.5.0",
-    "autoprefixer": "^10.0.0",
-    "postcss": "^8.0.0"
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.0"
   }
 }
 ```
+
+> **참고:** Tailwind v4는 `tailwind.config.ts` 대신 CSS 파일 기반 설정 사용. `create-next-app@latest` 실행 시 자동 설치됨.
 
 ---
 
