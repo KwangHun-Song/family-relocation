@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm"
 
 export default function MarkdownRenderer({ content }: { content: string }) {
   return (
-    <div className="prose prose-zinc max-w-none">
+    <div className="prose prose-zinc dark:prose-invert max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -14,11 +14,10 @@ export default function MarkdownRenderer({ content }: { content: string }) {
               {...props}
               checked={checked}
               readOnly
-              className={checked ? "line-through opacity-50" : ""}
             />
           ),
           li: ({ children, ...props }) => (
-            <li {...props} className="marker:text-zinc-400">
+            <li {...props} className="marker:text-zinc-400 dark:marker:text-zinc-500">
               {children}
             </li>
           ),
@@ -28,12 +27,12 @@ export default function MarkdownRenderer({ content }: { content: string }) {
             </div>
           ),
           th: ({ children }) => (
-            <th className="bg-zinc-100 px-3 py-2 text-left font-semibold text-zinc-700">
+            <th className="bg-zinc-100 dark:bg-zinc-700 px-3 py-2 text-left font-semibold text-zinc-700 dark:text-zinc-200">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="border-t border-zinc-200 px-3 py-2 text-zinc-600">
+            <td className="border-t border-zinc-200 dark:border-zinc-600 px-3 py-2 text-zinc-600 dark:text-zinc-400">
               {children}
             </td>
           ),

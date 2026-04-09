@@ -25,3 +25,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 체크된 할 일 항목 취소선 처리 */
+.prose li:has(input[type="checkbox"]:checked) {
+  text-decoration: line-through;
+  opacity: 0.5;
+}

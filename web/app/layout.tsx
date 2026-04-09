@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${geist.variable} h-full`}>
-      <body className="min-h-full flex flex-col bg-zinc-50 font-sans antialiased">
+      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-900 font-sans antialiased">
         <NavBar />
         <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
           {children}
